@@ -15,19 +15,28 @@ import os
 # have a 10 to represent 10 not 0
 dice_to_add = [
     {
-        "max_roll": 6,
+        "max_roll": 4,
+        "min_roll": 1,
         "step": 1,
     },
     {
-        "max_roll": 8,
+        "max_roll": 6,
+        "min_roll": 1,
+        "step": 1,
+    },
+    {
+        "max_roll": 10,
+        "min_roll": 1,
         "step": 1,
     },
     {
         "max_roll": 12,
+        "min_roll": 1,
         "step": 1,
     },
     {
         "max_roll": 20,
+        "min_roll": 1,
         "step": 1,
     },
 ]
@@ -48,16 +57,15 @@ def folder_check(directory):
 def set_up_folders():
     # Make folder for all training images
     folder_check(os.getcwd() + "/Training-Images")
+    folder_check(os.getcwd() + "/Training-Images/Single-Dice")
     for dice in dice_to_add:
         max_roll = dice["max_roll"]
         # Make directory for dice if not already there
-        folder_check(os.getcwd() + "/Training-Images/d" + str(max_roll))
+        folder_check(os.getcwd() + "/Training-Images/Single-Dice/d" + str(max_roll))
         # Make folders for possible rolls
-        for roll in range(1, max_roll + 1, dice["step"]):
-            folder_check(os.getcwd() + "/Training-Images/d" + str(max_roll) + "/" + str(roll))
+        for roll in range(dice["min_roll"], max_roll + 1, dice["step"]):
+            folder_check(os.getcwd() + "/Training-Images/Single-Dice/d" + str(max_roll) + "/" + str(roll))
 
 
 if __name__ == '__main__':
     set_up_folders()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
