@@ -1,0 +1,10 @@
+Test: Test.txt
+Train: Train.txt
+names:
+  0: d6
+  1: d4
+  2: d10
+  3: d12
+  4: d20
+  5: d8
+path: .
