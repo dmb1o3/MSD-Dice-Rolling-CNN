@@ -140,3 +140,15 @@ data/images/Train/phone_tray_image_27.jpg
 data/images/Train/phone_tray_image_7.jpg
 data/images/Train/phone_tray_image_8.jpg
 data/images/Train/phone_tray_image_9.jpg
+data/images/Train/image_40.jpg
+data/images/Train/image_41.jpg
+data/images/Train/image_42.jpg
+data/images/Train/image_43.jpg
+data/images/Train/image_45.jpg
+data/images/Train/image_47.jpg
+data/images/Train/image_48.jpg
+data/images/Train/image_49.jpg
+data/images/Train/image_50.jpg
+data/images/Train/image_51.jpg
+data/images/Train/image_52.jpg
+data/images/Train/image_53.jpg

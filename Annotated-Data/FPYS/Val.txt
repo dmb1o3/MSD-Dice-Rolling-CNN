@@ -28,3 +28,17 @@ data/images/Val/image_35_1.jpg
 data/images/Val/image_36.jpg
 data/images/Val/image_37.jpg
 data/images/Val/image_38.jpg
+data/images/Val/image_58.jpg
+data/images/Val/image_59.jpg
+data/images/Val/image_60.jpg
+data/images/Val/image_61.jpg
+data/images/Val/image_62.jpg
+data/images/Val/image_63.jpg
+data/images/Val/image_65.jpg
+data/images/Val/image_66.jpg
+data/images/Val/image_67.jpg
+data/images/Val/image_68.jpg
+data/images/Val/image_69.jpg
+data/images/Val/image_70.jpg
+data/images/Val/image_71.jpg
+data/images/Val/image_72.jpg

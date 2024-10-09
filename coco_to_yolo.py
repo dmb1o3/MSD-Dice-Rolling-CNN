@@ -2,6 +2,9 @@ from ultralytics import YOLO
 from ultralytics.data.converter import convert_coco
 import os
 
+YOLOv8_SEG = "yolov8n-seg.pt"
+YOLOv11_SEG = "yolo11n-seg.pt"
+
 
 def coco_to_yolo():
     folder_name = input("Name of the folder located in Annotated-Data that contains COCO json ")
@@ -10,12 +13,12 @@ def coco_to_yolo():
 
 def run_model():
     data_path = "./Annotated-Data/FPYS/data.yaml"
-    model = YOLO("yolov8n-seg.pt")
+    model = YOLO(YOLOv8_SEG)
     model.train(
         data=data_path,
-        epochs=25,
-        batch=5,
-        name="dice_segmentation_experiment"
+        epochs=100,
+        batch=10,
+        name="YOLOv8_dice_segmentation_experiment_batch_10",
     )
 
     # Run validation to check metrics
