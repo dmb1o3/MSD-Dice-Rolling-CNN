@@ -1,3 +1,4 @@
+from torchvision.transforms.v2.functional import perspective
 from ultralytics import YOLO
 from ultralytics.data.converter import convert_coco
 import os
@@ -14,11 +15,14 @@ def coco_to_yolo():
 def run_model():
     data_path = "./Annotated-Data/FPYS/data.yaml"
     model = YOLO(YOLOv8_SEG)
+
     model.train(
         data=data_path,
         epochs=100,
-        batch=10,
-        name="YOLOv8_dice_segmentation_experiment_batch_10",
+        batch=5,
+        name="YOLOv8_dice_segmentation_experiment_batch_5",
+        flipud=0.5,
+        perspective=0.0001,
     )
 
     # Run validation to check metrics
@@ -27,7 +31,7 @@ def run_model():
 
     # Predict on a test image
     test_image = os.path.join(os.getcwd(), 'Annotated-Data/FPYS/images/val/image_23.jpg')
-    results = model(test_image)  # This returns predictions
+    results = model(test_image, augment=True)  # This returns predictions
 
     for result in results:
         result.show()
