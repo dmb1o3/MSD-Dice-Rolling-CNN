@@ -12,7 +12,7 @@ def coco_to_yolo():
     folder_path = os.getcwd() + "/Annotated-Data/" + folder_name + "/"
     convert_coco(folder_path, save_dir=folder_path + "YOLO-Data", use_segments=True)
 
-def run_model():
+def train_model():
     data_path = "./Annotated-Data/FPYS/data.yaml"
     model = YOLO(YOLOv8_SEG)
 
@@ -31,12 +31,29 @@ def run_model():
 
     # Predict on a test image
     test_image = os.path.join(os.getcwd(), 'Annotated-Data/FPYS/images/val/image_23.jpg')
-    results = model(test_image, augment=True)  # This returns predictions
+    results = model(test_image)
 
     for result in results:
         result.show()
         result.save("annotated_image.jpg")
 
 
+def run_model():
+    data_path = "./runs/segment/YOLOv8_dice_segmentation_experiment/weights/best.pt"
+    model = YOLO(data_path)
+
+    test_image = os.path.join(os.getcwd(), 'Annotated-Data/FPYS/images/val/image_23.jpg')
+    results = model(test_image)
+    masks = results[0].masks
+    boxes = results[0].boxes
+    classes = results[0].names
+    print(classes)
+
+
+
+
+
+
+
 if __name__ == '__main__':
-    run_model()
+    train_model()
