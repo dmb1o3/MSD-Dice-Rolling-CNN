@@ -37,7 +37,7 @@ def get_segment_crop(img,tol=0, mask=None):
 
 def run_model():
     # Load model
-    model_folder = "YOLOv11_dice_segmentation_experiment_batch_5_epoch_400_patience_20"
+    model_folder = "YOLOv8_dice_segmentation_experiment_batch_5"
     model = YOLO("./runs/segment/" + model_folder + "/weights/best.pt")
 
     for image_path in image_paths:
@@ -46,25 +46,35 @@ def run_model():
         results = model(img)
         results = results[0]
         result_dict = results.to_df().to_dict()
-        for i in result_dict['name']:
-            # Get bounding box
-            box = result_dict['box']
-            x_min = int(box[i]['x1'])
-            y_min = int(box[i]['y1'])
-            x_max = int(box[i]['x2'])
-            y_max = int(box[i]['y2'])
-            # Crop image
-            cropped_img = img[y_min:y_max, x_min:x_max]
-            # Set up file name and path to save crop
-            filename = f"{os.path.basename(image_path)[:-4]}_crop_{i}.jpg"  # Change .png to your desired format
-            dice_type = result_dict["name"][i]
-            save_path = f'./runs/predictions/box/{dice_type}/'
-            os.makedirs(save_path, exist_ok=True)
-            save_path = save_path + filename
-            # Save the cropped image
-            cv2.imwrite(save_path, cropped_img)  # Use mask.numpy() to get the image data
-            print(f"Saved cropped image to {save_path}")
-            # @TODO Crop by segment
+        print(result_dict)
+        if result_dict:
+            for i in result_dict['name']:
+                mask_points = np.array(list(zip(result_dict['segments'][i]['x'], result_dict['segments'][i]['y'])),
+                                       dtype=np.int32)
+                mask = np.zeros(img.shape[:2], dtype=np.uint8)  # Create a black mask
+                cv2.fillPoly(mask, [mask_points], 255)  # Fill the polygon with white
+
+                # Apply the mask to the cropped image
+                masked_img = cv2.bitwise_and(img, img, mask=mask)
+
+                # Crop by bounding box
+                # Get bounding box
+                box = result_dict['box']
+                x_min = int(box[i]['x1'])
+                y_min = int(box[i]['y1'])
+                x_max = int(box[i]['x2'])
+                y_max = int(box[i]['y2'])
+                # Crop image
+                cropped_img = masked_img[y_min:y_max, x_min:x_max]
+                # Set up file name and path to save crop
+                filename = f"{os.path.basename(image_path)[:-4]}_crop_{i}.jpg"  # Change .png to your desired format
+                dice_type = result_dict["name"][i]
+                save_path = f'./runs/predictions/seg_and_box/{dice_type}/'
+                os.makedirs(save_path, exist_ok=True)
+                save_path = save_path + filename
+                # Save the cropped image
+                cv2.imwrite(save_path, cropped_img)  # Use mask.numpy() to get the image data
+                print(f"Saved cropped image to {save_path}")
 
 if __name__ == '__main__':
     run_model()
