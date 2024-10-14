@@ -1,28 +1,21 @@
-from torchvision.transforms.v2.functional import perspective
 from ultralytics import YOLO
-from ultralytics.data.converter import convert_coco
+import torch
 import os
 
 YOLOv8_SEG = "yolov8n-seg.pt"
 YOLOv11_SEG = "yolo11n-seg.pt"
 
-
-def coco_to_yolo():
-    folder_name = input("Name of the folder located in Annotated-Data that contains COCO json ")
-    folder_path = os.getcwd() + "/Annotated-Data/" + folder_name + "/"
-    convert_coco(folder_path, save_dir=folder_path + "YOLO-Data", use_segments=True)
-
 def train_model():
-    data_path = "./Annotated-Data/FPYS/data.yaml"
-    model = YOLO(YOLOv8_SEG)
+    data_path = "./Annotated-Data/YOLO/FPYS/data.yaml"
+    model = YOLO(YOLOv11_SEG)
 
     model.train(
         data=data_path,
-        epochs=100,
+        epochs=400,
         batch=5,
-        name="YOLOv8_dice_segmentation_experiment_batch_5",
+        name="YOLOv11_dice_segmentation_experiment_batch_5_epoch_400_patience_20",
         flipud=0.5,
-        perspective=0.0001,
+        patience=20,
     )
 
     # Run validation to check metrics
@@ -30,7 +23,7 @@ def train_model():
     print(val_results)
 
     # Predict on a test image
-    test_image = os.path.join(os.getcwd(), 'Annotated-Data/FPYS/images/val/image_23.jpg')
+    test_image = os.path.join(os.getcwd(), 'Annotated-Data/YOLO/FPYS/images/val/image_23.jpg')
     results = model(test_image)
 
     for result in results:
@@ -47,10 +40,8 @@ def run_model():
     masks = results[0].masks
     boxes = results[0].boxes
     classes = results[0].names
+
     print(classes)
-
-
-
 
 
 
