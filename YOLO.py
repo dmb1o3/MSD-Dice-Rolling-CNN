@@ -4,18 +4,29 @@ import os
 
 YOLOv8_SEG = "yolov8n-seg.pt"
 YOLOv11_SEG = "yolo11n-seg.pt"
+YOLOv11_CLS = "yolo11n-cls.pt"
 
-def train_model():
+
+def train_dice_type_model():
+    """
+    Train a YOLO segmentation model to detect dice type i.e d3, d6 ...
+    :return:
+    """
     data_path = "./Annotated-Data/YOLO/FPYS/data.yaml"
-    model = YOLO(YOLOv11_SEG)
+    model = YOLO(YOLOv8_SEG)
 
     model.train(
         data=data_path,
         epochs=400,
-        batch=5,
-        name="YOLOv11_dice_segmentation_experiment_batch_5_epoch_400_patience_20",
+        batch=32,
+        name="YOLOv8_Newest_run",
         flipud=0.5,
         patience=20,
+        degrees=180,
+        mixup=0.3,
+        copy_paste=0.3,
+        hsv_h=0.04,
+        shear=0.0,
     )
 
     # Run validation to check metrics
@@ -31,10 +42,45 @@ def train_model():
         result.save("annotated_image.jpg")
 
 
+def train_dice_roll_model():
+    """
+    Train a YOLO classification model to detect what number is rolled on a die
+    :return:
+    """
+    data_path = "./Annotated-Data/YOLO/Rolls/"
+    model = YOLO(YOLOv11_CLS)
+
+    model.train(
+        data=data_path,
+        epochs=100,
+        batch=5,
+        name="YOLOv11_Rolls",
+        flipud=0.5,
+        patience=20,
+        degrees=180,
+        mixup=0.3,
+        copy_paste=0.3,
+        hsv_h=0.04,
+        shear=0.0,
+    )
+
+    # Run validation to check metrics
+    val_results = model.val(data=data_path)
+    print(val_results)
+
+    # Predict on a test image
+    test_image = os.path.join(os.getcwd(), 'Annotated-Data/YOLO/Rolls/Val/1/image_13_crop_3.jpg')
+    results = model(test_image)
+
+    for result in results:
+        result.show()
+        result.save("annotated_image.jpg")
+
+
+
 def run_model():
     data_path = "./runs/segment/YOLOv8_dice_segmentation_experiment/weights/best.pt"
     model = YOLO(data_path)
-
     test_image = os.path.join(os.getcwd(), 'Annotated-Data/FPYS/images/val/image_23.jpg')
     results = model(test_image)
     masks = results[0].masks
@@ -44,7 +90,5 @@ def run_model():
     print(classes)
 
 
-
-
 if __name__ == '__main__':
-    train_model()
+    train_dice_roll_model()

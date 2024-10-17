@@ -1,0 +1,5 @@
+path: C:\Users\mrjoy\PycharmProjects\MSD-Dice-Rolling-CNN\Annotated-Data\YOLO\Rolls
+train: C:\Users\mrjoy\PycharmProjects\MSD-Dice-Rolling-CNN\Annotated-Data\YOLO\Rolls\images\Train
+val: C:\Users\mrjoy\PycharmProjects\MSD-Dice-Rolling-CNN\Annotated-Data\YOLO\Rolls\images\Val
+nc: 7
+names: ['1', '2', '3', '4', '5', '6', 'Unreadable']

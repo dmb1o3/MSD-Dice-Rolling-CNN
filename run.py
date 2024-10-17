@@ -5,15 +5,6 @@ import pandas as pd
 import cv2
 import glob
 
-# Set up what images model should look at
-train_image_folder = r'C:\Users\mrjoy\PycharmProjects\MSD-Dice-Rolling-CNN\Annotated-Data\YOLO\FPYS\images\Train'
-val_image_folder = r'C:\Users\mrjoy\PycharmProjects\MSD-Dice-Rolling-CNN\Annotated-Data\YOLO\FPYS\images\Val'
-image_paths = glob.glob(os.path.join(train_image_folder, '*.jpg')) + \
-              glob.glob(os.path.join(train_image_folder, '*.png')) + \
-              glob.glob(os.path.join(train_image_folder, '*.jpeg')) + \
-              glob.glob(os.path.join(val_image_folder, '*.jpg')) + \
-              glob.glob(os.path.join(val_image_folder, '*.png')) + \
-              glob.glob(os.path.join(val_image_folder, '*.jpeg'))
 
 
 def get_segment_crop(img,tol=0, mask=None):
@@ -35,10 +26,41 @@ def get_segment_crop(img,tol=0, mask=None):
     return img[y_min:y_max + 1, x_min:x_max + 1]
 
 
-def run_model():
+def run_dice_roll_model():
     # Load model
-    model_folder = "YOLOv8_dice_segmentation_experiment_batch_5"
+    model_folder = "YOLOv11_Rolls17"
+    model = YOLO("./runs/classify/" + model_folder + "/weights/best.pt")
+    results = model("./runs/predictions/seg_and_box_test/")
+
+    # Set up what images model should look at
+    image_folder = r'./runs/predictions/seg_and_box_test'
+    image_paths = glob.glob(os.path.join(image_folder, '*.jpg'))
+
+    for i in range(0, len(results)):
+        # Set up file name and path to save crop
+        filename = f"{os.path.basename(image_paths[i])[:-4]}.jpg"  # Change .png to your desired format
+        save_path = f'./runs/predictions/rolls/'
+        os.makedirs(save_path, exist_ok=True)
+        save_path = save_path + filename
+        # Save the cropped image
+        results[i].save(save_path)  # Use mask.numpy() to get the image data
+        print(f"Saved cropped image to {save_path}")
+
+
+def run_dice_type_model():
+    # Load model
+    model_folder = "YOLOv8_Newest_run"
     model = YOLO("./runs/segment/" + model_folder + "/weights/best.pt")
+
+    # Set up what images model should look at
+    train_image_folder = r'C:\Users\mrjoy\PycharmProjects\MSD-Dice-Rolling-CNN\Annotated-Data\YOLO\FPYS\images\Train'
+    val_image_folder = r'C:\Users\mrjoy\PycharmProjects\MSD-Dice-Rolling-CNN\Annotated-Data\YOLO\FPYS\images\Val'
+    image_paths = glob.glob(os.path.join(train_image_folder, '*.jpg')) + \
+                  glob.glob(os.path.join(train_image_folder, '*.png')) + \
+                  glob.glob(os.path.join(train_image_folder, '*.jpeg')) + \
+                  glob.glob(os.path.join(val_image_folder, '*.jpg')) + \
+                  glob.glob(os.path.join(val_image_folder, '*.png')) + \
+                  glob.glob(os.path.join(val_image_folder, '*.jpeg'))
 
     for image_path in image_paths:
         print(f'\nRunning inference on {image_path}')
@@ -69,12 +91,15 @@ def run_model():
                 # Set up file name and path to save crop
                 filename = f"{os.path.basename(image_path)[:-4]}_crop_{i}.jpg"  # Change .png to your desired format
                 dice_type = result_dict["name"][i]
-                save_path = f'./runs/predictions/seg_and_box/{dice_type}/'
+                # save_path = f'./runs/predictions/seg_and_box_newest_run/{dice_type}/'
+                save_path = f'./runs/predictions/seg_and_box_test/'
                 os.makedirs(save_path, exist_ok=True)
                 save_path = save_path + filename
                 # Save the cropped image
                 cv2.imwrite(save_path, cropped_img)  # Use mask.numpy() to get the image data
                 print(f"Saved cropped image to {save_path}")
 
+
 if __name__ == '__main__':
-    run_model()
+    #run_dice_type_model()
+    run_dice_roll_model()
