@@ -1,10 +1,8 @@
 import os
 from ultralytics import YOLO
 import numpy as np
-import pandas as pd
 import cv2
 import glob
-
 
 
 def get_segment_crop(img,tol=0, mask=None):
@@ -53,8 +51,8 @@ def run_dice_type_model():
     model = YOLO("./runs/segment/" + model_folder + "/weights/best.pt")
 
     # Set up what images model should look at
-    train_image_folder = r'C:\Users\mrjoy\PycharmProjects\MSD-Dice-Rolling-CNN\Annotated-Data\YOLO\FPYS\images\Train'
-    val_image_folder = r'C:\Users\mrjoy\PycharmProjects\MSD-Dice-Rolling-CNN\Annotated-Data\YOLO\FPYS\images\Val'
+    train_image_folder = r'./Annotated-Data/YOLO/FPYS/images/Train'
+    val_image_folder = r'./Annotated-Data/YOLO/FPYS/images/Val'
     image_paths = glob.glob(os.path.join(train_image_folder, '*.jpg')) + \
                   glob.glob(os.path.join(train_image_folder, '*.png')) + \
                   glob.glob(os.path.join(train_image_folder, '*.jpeg')) + \
@@ -101,5 +99,5 @@ def run_dice_type_model():
 
 
 if __name__ == '__main__':
-    #run_dice_type_model()
+    run_dice_type_model()
     run_dice_roll_model()
