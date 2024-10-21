@@ -47,14 +47,14 @@ def train_dice_roll_model():
     Train a YOLO classification model to detect what number is rolled on a die
     :return:
     """
-    data_path = "./Annotated-Data/YOLO/Rolls/"
+    data_path = "./Annotated-Data/YOLO/Rolls/All"
     model = YOLO(YOLOv11_CLS)
 
     model.train(
         data=data_path,
-        epochs=100,
-        batch=5,
-        name="YOLOv11_Rolls",
+        epochs=400,
+        batch=10,
+        name="YOLOv11_Rolls_All_Not_Including_Recent_Data",
         flipud=0.5,
         patience=20,
         degrees=180,
@@ -67,14 +67,6 @@ def train_dice_roll_model():
     # Run validation to check metrics
     val_results = model.val(data=data_path)
     print(val_results)
-
-    # Predict on a test image
-    test_image = os.path.join(os.getcwd(), 'Annotated-Data/YOLO/Rolls/Val/1/image_13_crop_3.jpg')
-    results = model(test_image)
-
-    for result in results:
-        result.show()
-        result.save("annotated_image.jpg")
 
 
 
