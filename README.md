@@ -4,6 +4,7 @@ The goal of the project is to build a dice tray that users can roll die into. On
 a sensor will detect the dice, trigger the camera, which sends the image to the users computer 
 where a YOLO ensemble model will identify the dice type and what numbers were rolled on each die
 
+This is intended to be used in conjunction with the Connected Dice Rolling dice tray
 
 ## Overview
 ### main.py
