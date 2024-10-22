@@ -1,34 +1,23 @@
 import os
 import shutil
 from ultralytics import YOLO
-import install_dependencies
 import numpy as np
 import cv2
 import glob
 
 
-def get_segment_crop(img,tol=0, mask=None):
-    # Ensure the mask is a boolean array
-    mask = mask.astype(bool)
-
-    # Find the bounding box of the non-zero pixels
-    x_indices = np.any(mask, axis=0)  # Columns where mask is True
-    y_indices = np.any(mask, axis=1)  # Rows where mask is True
-
-    if not np.any(x_indices) or not np.any(y_indices):
-        return None  # Return None if no object is found
-
-    # Get the bounding box coordinates
-    x_min, x_max = np.where(x_indices)[0][[0, -1]]
-    y_min, y_max = np.where(y_indices)[0][[0, -1]]
-
-    # Crop the image using the bounding box
-    return img[y_min:y_max + 1, x_min:x_max + 1]
-
-
 def run_dice_roll_model(model, cropped_img, parent_image_name, crop_number):
+    """
+    Runs the dice roll model on a cropped image and returns the value of the top1 roll
+
+    :param model: YOLO model that we want to use for detecting dice rolls
+    :param cropped_img: The cropped image we want to detect roll from
+    :param parent_image_name: Name of parent file. Used for saving images to
+    :param crop_number:
+    :return:
+    """
     results = model(cropped_img)
-    dice_rolls = {"name":{}}
+    dice_rolls = {"name": {}}
     # Set up file name and path to save crop
     filename = f"{parent_image_name}_{crop_number}.jpg"  # Change .png to your desired format
     save_path = f'./demo/classify/'
@@ -44,7 +33,16 @@ def run_dice_roll_model(model, cropped_img, parent_image_name, crop_number):
     return dice_roll
 
 
-def run_dice_type_dice_roll_models():
+def run_yolo_ensemble():
+    """
+    Will run yolo ensemble to detect dice type and roll. First model is a die type model to detect the type of dice
+    rolled then crop and segment around each die. Then the second model is used detect the roll on the cropped and
+    segmented images.
+
+    :return: Two dictionaries first for die type, second for roll from die. die_id are consistent between dictionaries
+                First dictionary key=die_id, value=die_type
+                Second dictionary key=die_id, value=die_roll
+    """
     # Load dice type model
     dice_type_folder = "YOLOv8_Newest_run"
     dice_type_model = YOLO("./runs/segment/" + dice_type_folder + "/weights/best.pt")
@@ -105,7 +103,14 @@ def run_dice_type_dice_roll_models():
     return result_dict["name"], result_dict["rolls"]
 
 
-def run_models():
+def setup_yolo_ensemble():
+    """
+    Will run yolo ensemble. First model is a die type model to detect the type of dice rolled then crop and segment
+    around each die. Then the second model is used detect the roll on the cropped and segmented images. Will then print
+    out all die detected, including type and roll, then total all rolls for user
+
+    :return: Nothing
+    """
     # If the exist clear out folders
     classify_folder = "./demo/classify"
     segment_folder = "./demo/segment"
@@ -115,7 +120,7 @@ def run_models():
         shutil.rmtree(segment_folder)
 
     # Run models
-    dice_type, dice_rolls = run_dice_type_dice_roll_models()
+    dice_type, dice_rolls = run_yolo_ensemble()
 
     # Print out what was detected including unreadable
     print("Detected")
@@ -135,4 +140,4 @@ def run_models():
 
 # @TODO when done testing stop image from saving predictions of rolls
 if __name__ == '__main__':
-    run_models()
+    setup_yolo_ensemble()

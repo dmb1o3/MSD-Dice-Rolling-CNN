@@ -6,19 +6,17 @@ where a YOLO ensemble model will identify the dice type and what numbers were ro
 
 
 ## Overview
-
 ### main.py
-This 
+This is the main file for program and runs the ensemble model to detect die type and roll
 
 #### YOLO_training.py
-This file is used to train both of the YOLO dice type and dice roll models 
+This file is used to train the YOLO dice type and dice roll models 
 
 #### arduino_communication.py
-![Preparing Data Diagram.svg](README%20Diagrams%2FPreparing%20Data%20Diagram.svg)
+NEED TO DO
 
 ### install_dependencies.py
-This file contains the scikit learn models implemented with hyperparameter tuning. To change what years of data the 
-model looks at change the variable years_to_examine at the top of the main function.
+NEED TO DO
 
 ## Installation (NEEDS TO BE UPDATED)
 ### Python
@@ -29,7 +27,7 @@ This program requires python 3.9 or greater. I would recommend using conda to cr
 2. conda activate envName
 
 
-### Requirements and Running Program
+### Requirements and Running Program(NEED TO UPDATE)
 1. Download repository
 2. Install requirements using "pip install -r requirements.txt" 
 3. Run data_collector.py

@@ -1,7 +1,7 @@
 from ultralytics import YOLO
-import torch
 import os
 
+# Pretrained YOLO models
 YOLOv8_SEG = "yolov8n-seg.pt"
 YOLOv11_SEG = "yolo11n-seg.pt"
 YOLOv11_CLS = "yolo11n-cls.pt"
@@ -10,7 +10,8 @@ YOLOv11_CLS = "yolo11n-cls.pt"
 def train_dice_type_model():
     """
     Train a YOLO segmentation model to detect dice type i.e d3, d6 ...
-    :return:
+
+    :return: Nothing
     """
     data_path = "./Annotated-Data/YOLO/FPYS/data.yaml"
     model = YOLO(YOLOv8_SEG)
@@ -45,7 +46,8 @@ def train_dice_type_model():
 def train_dice_roll_model():
     """
     Train a YOLO classification model to detect what number is rolled on a die
-    :return:
+
+    :return: Nothing
     """
     data_path = "./Annotated-Data/YOLO/Rolls/All"
     model = YOLO(YOLOv11_CLS)
@@ -67,7 +69,6 @@ def train_dice_roll_model():
     # Run validation to check metrics
     val_results = model.val(data=data_path)
     print(val_results)
-
 
 
 def run_model():
