@@ -1,6 +1,7 @@
 import os
 import shutil
 from ultralytics import YOLO
+import install_dependencies
 import numpy as np
 import cv2
 import glob
@@ -102,7 +103,6 @@ def run_dice_type_dice_roll_models():
                 print(f"Saved cropped image to {save_path}")
 
     return result_dict["name"], result_dict["rolls"]
-
 
 
 def run_models():

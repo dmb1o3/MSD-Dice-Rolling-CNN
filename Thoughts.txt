@@ -1,3 +1,0 @@
-Instead of having rotations for each picture we can just make them when we load them. I.e instead of rotating each image
-so we have each on for each cardinal direction we can instead just crop and rotate the image. This also lets us change
-how much we rotate so we could even do 360 for each if we really wanted to
