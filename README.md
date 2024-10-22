@@ -4,9 +4,22 @@ The goal of the project is to build a dice tray that users can roll die into. On
 a sensor will detect the dice, trigger the camera, which sends the image to the users computer 
 where a YOLO ensemble model will identify the dice type and what numbers were rolled on each die
 
-This is intended to be used in conjunction with the Connected Dice Rolling dice tray
 
-## Overview
+## Usage
+This is intended to be used in conjunction with the Connected Dice Rolling dice tray but 
+### With dice tray
+1. Plug Connected Dice Rolling dice tray into computer
+2. Run Dice Rolling executable 
+   1. If first time running will download python dependencies
+3. After terminal pops up you are free to roll dice into tray, and it will output results to terminal
+
+### Without dice tray
+1. Obtain image of dice
+2. Put image into ./demo
+3. run main.py then output will be printed to terminal
+
+
+## Files
 ### main.py
 This is the main file for program and runs the ensemble model to detect die type and roll
 
@@ -26,13 +39,3 @@ This program requires python 3.9 or greater. I would recommend using conda to cr
 [Link to a guide to install conda](https://developers.google.com/earth-engine/guides/python_install-conda)
 1. conda create --name envName python=3.9
 2. conda activate envName
-
-
-### Requirements and Running Program(NEED TO UPDATE)
-1. Download repository
-2. Install requirements using "pip install -r requirements.txt" 
-3. Run data_collector.py
-4. Enter in desired seasons
-5. After running can do whatever you would like with data but if you want to test the models go to models.py and change
-   years_to_examine to contain years you have downloaded data for
-6. Run models.py
