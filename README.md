@@ -13,10 +13,10 @@ This is the main file for program and runs the ensemble model to detect die type
 This file is used to train the YOLO dice type and dice roll models 
 
 #### arduino_communication.py
-NEED TO DO
+This file is used to communicate with arduino if you have the connected dice tray
 
 ### install_dependencies.py
-NEED TO DO
+This file is used to install all python dependencies needed in the project
 
 ## Installation (NEEDS TO BE UPDATED)
 ### Python
