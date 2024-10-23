@@ -16,7 +16,7 @@ def run_dice_roll_model(model, cropped_img, parent_image_name, crop_number):
     :param crop_number:
     :return:
     """
-    results = model(cropped_img)
+    results = model(cropped_img, verbose=False)
     dice_rolls = {"name": {}}
     # Set up file name and path to save crop
     filename = f"{parent_image_name}_{crop_number}.jpg"  # Change .png to your desired format
@@ -33,7 +33,7 @@ def run_dice_roll_model(model, cropped_img, parent_image_name, crop_number):
     return dice_roll
 
 
-def run_yolo_ensemble():
+def run():
     """
     Will run yolo ensemble to detect dice type and roll. First model is a die type model to detect the type of dice
     rolled then crop and segment around each die. Then the second model is used detect the roll on the cropped and
@@ -60,7 +60,7 @@ def run_yolo_ensemble():
         # Read image
         img = cv2.imread(image_path)
         # Run result
-        results = dice_type_model(img)
+        results = dice_type_model(img, verbose=False)
         # Get first frame since just a photo
         results = results[0]
         # Transform into dictionary
@@ -98,7 +98,8 @@ def run_yolo_ensemble():
                 save_path = save_path + filename
                 # Save the cropped image
                 cv2.imwrite(save_path, cropped_img)  # Use mask.numpy() to get the image data
-                print(f"Saved cropped image to {save_path}")
+
+                # print(f"Saved cropped image to {save_path}")
 
     return result_dict["name"], result_dict["rolls"]
 
@@ -120,15 +121,15 @@ def setup_yolo_ensemble():
         shutil.rmtree(segment_folder)
 
     # Run models
-    dice_type, dice_rolls = run_yolo_ensemble()
+    dice_type, dice_rolls = run()
 
     # Print out what was detected including unreadable
-    print("Detected")
+    print("\nDetected")
     print(dice_type)
     print(dice_rolls)
 
     # Print out output filtering out unreadable results
-    print("Output")
+    print("\nOutput")
     total = 0
     for key, value in dice_rolls.items():
         if value != "Unreadable":

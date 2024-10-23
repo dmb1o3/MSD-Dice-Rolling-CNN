@@ -20,7 +20,7 @@ This is intended to be used in conjunction with the Connected Dice Rolling dice 
 
 
 ## Files
-### main.py
+### ensemble.py
 This is the main file for program and runs the ensemble model to detect die type and roll
 
 #### YOLO_training.py
