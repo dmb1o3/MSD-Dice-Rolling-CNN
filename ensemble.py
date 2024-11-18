@@ -1,9 +1,11 @@
 import os
 import shutil
+import sys
 from ultralytics import YOLO
 import numpy as np
 import cv2
 import glob
+
 
 
 def run_dice_roll_model(model, cropped_img, parent_image_name, crop_number):
@@ -44,14 +46,19 @@ def run():
                 Second dictionary key=die_id, value=die_roll
     """
     # Load dice type model
-    dice_type_folder = "YOLOv8_Newest_run"
+    dice_type_folder = "YOLOv8_New_Tray_First_Run"
     dice_type_model = YOLO("./runs/segment/" + dice_type_folder + "/weights/best.pt")
+    print("Loading dice type model " + "./runs/segment/" + dice_type_folder + "/weights/best.pt")
     # Load dice roll model
     dice_roll_folder = "YOLOv11_Rolls_All_Not_Including_Recent_Data"
     dice_roll_model = YOLO("./runs/classify/" + dice_roll_folder + "/weights/best.pt")
+    print("Loading dice roll model " + "./runs/classify/" + dice_roll_folder + "/weights/best.pt")
 
-    image_folder = r'./demo/'
+    image_folder = r'./demo'
     image_paths = glob.glob(os.path.join(image_folder, '*.jpg'))
+
+    print("Image Paths")
+    print(image_paths)
 
     result_dict = {'name': {}, "rolls": {}}
 
@@ -59,15 +66,25 @@ def run():
         print(f'\nRunning inference on {image_path}')
         # Read image
         img = cv2.imread(image_path)
+        #print("Read image")
         # Run result
-        results = dice_type_model(img, verbose=False)
+        print("Running dice type model")
+        try:
+            results = dice_type_model(img, verbose=False)
+        except Exception as e:
+            print("An error has occured " + str(e))
+
+        print("Dice type model finished")
+        #print("Got dice type")
         # Get first frame since just a photo
         results = results[0]
         # Transform into dictionary
         result_dict = results.to_df().to_dict()
         result_dict["rolls"] = {}
+        print("YO")
+        print(result_dict)
         # If we detected dice for each dice crop and segment
-        if result_dict:
+        if "name" in result_dict:
             for i in result_dict['name']:
                 mask_points = np.array(list(zip(result_dict['segments'][i]['x'], result_dict['segments'][i]['y'])),
                                        dtype=np.int32)
@@ -86,8 +103,9 @@ def run():
                 y_max = int(box[i]['y2'])
                 # Crop image
                 cropped_img = masked_img[y_min:y_max, x_min:x_max]
-
+                print("Running dice roll model")
                 result_dict["rolls"][i] = run_dice_roll_model(dice_roll_model, cropped_img, os.path.basename(image_path)[:-4], i)
+                print("Got dice rolls " + str(i))
 
                 # Set up file name and path to save crop
                 filename = f"{os.path.basename(image_path)[:-4]}_crop_{i}.jpg"  # Change .png to your desired format
@@ -101,10 +119,14 @@ def run():
 
                 # print(f"Saved cropped image to {save_path}")
 
+        else:
+            return {}, {}
+
+
     return result_dict["name"], result_dict["rolls"]
 
 
-def setup_yolo_ensemble():
+def setup_run_yolo_ensemble():
     """
     Will run yolo ensemble. First model is a die type model to detect the type of dice rolled then crop and segment
     around each die. Then the second model is used detect the roll on the cropped and segmented images. Will then print
@@ -141,4 +163,4 @@ def setup_yolo_ensemble():
 
 # @TODO when done testing stop image from saving predictions of rolls
 if __name__ == '__main__':
-    setup_yolo_ensemble()
+    setup_run_yolo_ensemble()
